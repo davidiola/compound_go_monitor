@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/bonedaddy/go-compound/v2/client"
 	"github.com/bonedaddy/go-compound/v2/models"
+	"github.com/davidiola/compound_go_monitor/dataaccess"
 	"github.com/davidiola/compound_go_monitor/orch"
 	"sync"
 )
@@ -16,24 +16,12 @@ func main() {
 
 	cl := client.NewClient(COMP_V2_URL)
 	o := orch.NewOrch(*cl)
-	numPages := o.RetrieveNumPages()
-	wg.Add(numPages)
-	acctChan := make(chan []models.Account, numPages)
 
-	o.RetrieveAllAccounts(acctChan, &wg)
-	wg.Wait()
-	close(acctChan)
-	i := 1
-	for i <= numPages {
-		accounts = append(accounts, <-acctChan...)
-		i += 1
-	}
+	accounts = o.RetrieveAllAccounts(&wg)
+
+	dataAccess := dataaccess.NewDataAccess()
 
 	for _, acct := range accounts {
-		printAddress(acct)
+		dataAccess.WriteAccount(acct)
 	}
-}
-
-func printAddress(acct models.Account) {
-	fmt.Printf("Address: %s\n", acct.Address)
 }
