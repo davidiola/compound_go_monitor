@@ -9,7 +9,7 @@ import (
 )
 
 var DEF_PAGE_SIZE string = "100"
-var MAX_GO_ROUTINES int = 100
+var MAX_GO_ROUTINES int = 40
 
 type Orch struct {
 	c client.Client

@@ -12,7 +12,6 @@ var COMP_V2_URL string = "https://api.compound.finance/api/v2"
 
 func main() {
 	var accounts []models.Account
-	// var acctList []models.Account
 	var wg sync.WaitGroup
 
 	cl := client.NewClient(COMP_V2_URL)
@@ -26,7 +25,6 @@ func main() {
 	close(acctChan)
 	i := 1
 	for i <= numPages {
-		// acctList <- acctChan
 		accounts = append(accounts, <-acctChan...)
 		i += 1
 	}
