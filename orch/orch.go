@@ -19,7 +19,8 @@ func NewOrch(c client.Client) *Orch {
 	return &Orch{c: c}
 }
 
-func (o *Orch) RetrieveAllAccounts(wg *sync.WaitGroup) []models.Account {
+func (o *Orch) RetrieveAllAccounts() []models.Account {
+	wg := &sync.WaitGroup{}
 	var accounts []models.Account
 	var pgNum = 1
 	numPages := o.RetrieveNumPages()
