@@ -10,16 +10,12 @@ import (
 var COMP_V2_URL string = "https://api.compound.finance/api/v2"
 
 func main() {
-	var accounts []models.Account
-
 	cl := client.NewClient(COMP_V2_URL)
-	o := orch.NewOrch(*cl)
+	da := dataaccess.NewDataAccess()
 
-	accounts = o.RetrieveAllAccounts()
+	o := orch.NewOrch(cl)
+	acctChan := make(chan []models.Account)
 
-	dataAccess := dataaccess.NewDataAccess()
-
-	for _, acct := range accounts {
-		dataAccess.WriteAccount(acct)
-	}
+	o.RetrieveAllAccounts(acctChan)
+	da.WriteAllAccounts(acctChan)
 }

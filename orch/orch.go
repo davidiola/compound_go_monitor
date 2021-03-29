@@ -9,50 +9,45 @@ import (
 )
 
 var PAGE_SIZE string = "100"
-var MAX_GO_ROUTINES int = 40
+var MAX_COMP_CONCURRENT_REQS int = 40
 
 type Orch struct {
-	c client.Client
+	c *client.Client
 }
 
-func NewOrch(c client.Client) *Orch {
+func NewOrch(c *client.Client) *Orch {
 	return &Orch{c: c}
 }
 
-func (o *Orch) RetrieveAllAccounts() []models.Account {
-	wg := &sync.WaitGroup{}
-	var accounts []models.Account
+func (o *Orch) RetrieveAllAccounts(acctChan chan []models.Account) {
+	var wg sync.WaitGroup
 	var pgNum = 1
 	numPages := o.RetrieveNumPages()
 	wg.Add(numPages)
-	acctChan := make(chan []models.Account, numPages)
-	limitRoutines := make(chan int, MAX_GO_ROUTINES)
-	for pgNum <= numPages {
-		limitRoutines <- 1
-		go o.RetrieveAccountsFromPage(acctChan, pgNum, wg, limitRoutines)
-		log.Println(pgNum)
-		pgNum += 1
-	}
-	wg.Wait()
-	close(acctChan)
-	i := 1
-	for i <= numPages {
-		accounts = append(accounts, <-acctChan...)
-		i += 1
-	}
-	return accounts
+	limitCompoundReqs := make(chan int, MAX_COMP_CONCURRENT_REQS)
+	go func() {
+		for pgNum <= numPages {
+			limitCompoundReqs <- 1
+			go o.RetrieveAccountsFromPage(acctChan, pgNum, limitCompoundReqs, &wg)
+			log.Println(pgNum)
+			pgNum += 1
+		}
+		wg.Wait()
+		close(acctChan)
+	}()
 }
 
-func (o *Orch) RetrieveAccountsFromPage(ch chan []models.Account, pgNum int, wg *sync.WaitGroup, limitRoutines chan int) {
+func (o *Orch) RetrieveAccountsFromPage(ch chan []models.Account, pgNum int, limitCompoundsReqs chan int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	acctResp, err := o.c.GetAccounts(PAGE_SIZE, strconv.Itoa(pgNum))
+	pgNumStr := strconv.Itoa(pgNum)
+	acctResp, err := o.c.GetAccounts(PAGE_SIZE, pgNumStr)
 	if err != nil {
 		log.Fatalf("error is: %s", err)
 	}
 	if acctResp != nil {
 		ch <- acctResp.Accounts
 	}
-	<-limitRoutines
+	<-limitCompoundsReqs
 }
 
 func (o *Orch) RetrieveNumPages() int {

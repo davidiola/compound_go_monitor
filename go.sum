@@ -52,6 +52,8 @@ github.com/bonedaddy/go-compound/v2 v2.0.0-rc1 h1:DQWiqb+Xa5pjxAWzQn8LKoffHVjNKo
 github.com/bonedaddy/go-compound/v2 v2.0.0-rc1/go.mod h1:ZoI9n0JLDOQBnu0JfrIqjcT3CrYYa5qfIuyhQSP+/jw=
 github.com/bonedaddy/go-compound/v2 v2.0.0-rc2 h1:dIzGbiI+yEsprH78jZ2WPKH0inTHKSQ8d9S75tIlfYI=
 github.com/bonedaddy/go-compound/v2 v2.0.0-rc2/go.mod h1:ZoI9n0JLDOQBnu0JfrIqjcT3CrYYa5qfIuyhQSP+/jw=
+github.com/bonedaddy/go-compound/v2 v2.0.0-rc3 h1:pFqwyGmHAYffa8yOucGHPMjdVjX2UmJrf6O9klqHDWA=
+github.com/bonedaddy/go-compound/v2 v2.0.0-rc3/go.mod h1:ZoI9n0JLDOQBnu0JfrIqjcT3CrYYa5qfIuyhQSP+/jw=
 github.com/btcsuite/btcd v0.20.1-beta/go.mod h1:wVuoA8VJLEcwgqHBwHmzLRazpKxTv13Px/pDuV7OomQ=
 github.com/btcsuite/btcd v0.21.0-beta/go.mod h1:ZSWyehm27aAuS9bvkATT+Xte3hjHZ+MRgMY/8NJ7K94=
 github.com/btcsuite/btclog v0.0.0-20170628155309-84c8d2346e9f/go.mod h1:TdznJufoqS23FtqVCzL0ZqgP5MqXbb4fg/WgDys70nA=
